@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Chat Nodejs - Nodejs.Vn</title>
+		<script type="text/javascript" src="/scripts/jquery.min.js"></script>
+
+		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css' />
+		<link href="/styles/animate.css" rel="stylesheet" type="text/css" />
+		<link href="/styles/style.css" rel="stylesheet" type="text/css" />
+		<link href="/styles/avgrund.css" rel="stylesheet" type="text/css" />
+		
+	</head>
+	<body>
+		<div class="avgrund-contents">
+			<header>
+				<h1>Multi-Room Chat Application <sup>{info}</sup></h1>
+				<h3>with node.js and socket.io &mdash; made by <a href="http://NgaNguyenDuy.github.io" target="_blank">NgaNguyenDuy</a></h3>
+				<a href="https://NgaNguyenDuy.github.com/chat-nodejs/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/images/forkme_right_green.png" alt="Fork me on GitHub"></a>
+			</header>
+			<div class="pr center wrapper">
+				<div class="cf pr chat animate">
+					<div class="pa chat-shadow">
+						<div class="content">Click 
+							<div class="big-button-green start">Start</div> 
+							to begin...
+						</div>
+					</div>
+					<div class="cf chat-top">
+						<div class="fl chat-left">
+							<div class="chat-messages">
+								<ul></ul>
+							</div>
+						</div>
+						<div class="fl chat-right">
+							<div class="chat-clients">
+								<div class="cf title">
+									<div class="fl">Users</div>
+								</div>
+								<ul></ul>
+							</div>
+							<div class="chat-rooms">
+								<div class="cf title">
+									<div class="fl">Rooms</div>
+									<div class="fr title-button">+</div>
+								</div>
+								<ul class="pr"></ul>
+							</div>
+						</div>
+					</div>
+					<div class="cf chat-bottom">
+						<div class="fl chat-input">
+							<input type="text" placeholder="compose message..." />
+						</div>
+						<div class="fl chat-submit">
+							<button>Send &rarr;</button>
+						</div>
+					</div>
+				</div>
+				<div class="pa info animate">
+					<h2>About this Project</h2>
+					<div class="image">
+						<img alt="images myselft" src="/images/myself.jpg" />
+					</div>
+					<div class="text">
+						This project created by NgaNguyenDuy</br>
+						as part of a Node.js & Socket.io.
+						<br/><br />
+						<img alt="github" class="git-icon" src="/images/github.png" /><br/><br/>
+						Get the code for this project from <a href="https://NgaNguyenDuy.github.com/chat-nodejs" target="_blank">github</a>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+		
+		<aside id="nickname-popup" class="popup animate avgrund-popup">
+			<div class="title">Enter a nickname</div>
+			<div class="content">Please select a nickname, up to 15 characters</div>
+			<div class="input"><input type="text" maxlength="15" placeholder="nickname..." /></div>
+			<div class="big-button-green small begin">&mdash; Begin &mdash;</div>
+		</aside>
+		<aside id="addroom-popup" class="popup animate avgrund-popup">
+			<div class="title">Enter a room name</div>
+			<div class="content">Room name up to 10 characters</div>
+			<div class="input"><input type="text" maxlength="10" placeholder="room name..." /></div>
+			<div class="big-button-green small create">Create &rarr;</div>
+		</aside>
+		<div class="avgrund-cover"></div>
+
+
+		<script type="text/javascript" src="/scripts/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="/scripts/jquery.tmpl.min.js"></script>
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="/scripts/avgrund.js"></script>
+		<script type="text/javascript" src="/scripts/chat.io.js"></script>
+		<script type="text/javascript">
+		$('h1 sup').on('click', function () {
+			if($('.chat').hasClass('bounceOutRight')){
+				$('.chat').removeClass('bounceOutRight');
+				$('.chat').addClass('bounceInLeft');
+				
+				$('.info').removeClass('bounceInLeft');
+				$('.info').addClass('bounceOutRight');
+				
+				window.setTimeout(function(){
+					$('.chat').removeClass('bounceInLeft');
+				}, 1500);
+			} else {
+				$('.chat').removeClass('bounceInLeft');
+				$('.chat').addClass('bounceOutRight');
+				
+				$('.info').removeClass('bounceOutRight');
+				$('.info').addClass('bounceInLeft');
+			}
+			
+		});
+		</script>
+
+		
+	</body>
+
+</html>
