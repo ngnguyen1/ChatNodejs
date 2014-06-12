@@ -6,6 +6,7 @@
 		<script type="text/javascript" src="/scripts/jquery.min.js"></script>
 
 		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css' />
+        <link rel="stylesheet" href="/styles/bootstrap/dist/css/bootstrap.min.css"/>
 		<link href="/styles/animate.css" rel="stylesheet" type="text/css" />
 		<link href="/styles/style.css" rel="stylesheet" type="text/css" />
 		<link href="/styles/avgrund.css" rel="stylesheet" type="text/css" />
@@ -14,9 +15,8 @@
 	<body>
 		<div class="avgrund-contents">
 			<header>
-				<h1>Multi-Room Chat Application <sup>{info}</sup></h1>
-				<h3>with node.js and socket.io &mdash; made by <a href="http://NgaNguyenDuy.github.io" target="_blank">NgaNguyenDuy</a></h3>
-				<a href="https://NgaNguyenDuy.github.com/chat-nodejs/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/images/forkme_right_green.png" alt="Fork me on GitHub"></a>
+				<h1>Chat Application at Nodejs.vn <sup>{info}</sup></h1>
+				<a href="https://github.com/NgaNguyenDuy/ChatNodejs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/images/forkme_right_green.png" alt="Fork me on GitHub"></a>
 			</header>
 			<div class="pr center wrapper">
 				<div class="cf pr chat animate">
@@ -28,20 +28,21 @@
 					</div>
 					<div class="cf chat-top">
 						<div class="fl chat-left">
-							<div class="chat-messages">
+                          <div class="title"><span>Chat</span></div>
+						  <div class="chat-messages">
 								<ul></ul>
 							</div>
 						</div>
 						<div class="fl chat-right">
 							<div class="chat-clients">
 								<div class="cf title">
-									<div class="fl">Users</div>
+								  <div class="fl"><span>Users</span></div>
 								</div>
 								<ul></ul>
 							</div>
 							<div class="chat-rooms">
 								<div class="cf title">
-									<div class="fl">Rooms</div>
+								  <div class="fl"><span>Rooms</span></div>
 									<div class="fr title-button">+</div>
 								</div>
 								<ul class="pr"></ul>
@@ -50,10 +51,7 @@
 					</div>
 					<div class="cf chat-bottom">
 						<div class="fl chat-input">
-							<input type="text" placeholder="compose message..." />
-						</div>
-						<div class="fl chat-submit">
-							<button>Send &rarr;</button>
+							<input class="form-control" type="text" placeholder="Type message" />
 						</div>
 					</div>
 				</div>
@@ -67,7 +65,7 @@
 						as part of a Node.js & Socket.io.
 						<br/><br />
 						<img alt="github" class="git-icon" src="/images/github.png" /><br/><br/>
-						Get the code for this project from <a href="https://NgaNguyenDuy.github.com/chat-nodejs" target="_blank">github</a>
+						Get the code for this project from <a href="https://github.com/NgaNguyenDuy/ChatNodejs" target="_blank">github</a>
 					</div>
 					
 				</div>
@@ -106,7 +104,7 @@
 				
 				window.setTimeout(function(){
 					$('.chat').removeClass('bounceInLeft');
-				}, 1500);
+				},1000);
 			} else {
 				$('.chat').removeClass('bounceInLeft');
 				$('.chat').addClass('bounceOutRight');

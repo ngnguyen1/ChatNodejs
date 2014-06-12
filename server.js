@@ -19,13 +19,6 @@ app.set('view engine', 'ejs');
 var router = express.Router();
 require('./route')(router);
 
-// app.get('/', function (req, res) {
-//  	res.sendfile(__dirname + '/public/index.html');
-// });
-
-
-
-
 
 io.sockets.on('connection', function(socket){
 
