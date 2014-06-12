@@ -1,5 +1,10 @@
 (function($){
 
+    var smile = {
+        ':)': '<img src="http://www.matcuoi.com/smiley/sm2nini15.gif">',
+        ':(': '<img src="/images/icons/24.gif">',
+        '=))': '*lanlon*'
+    };
 	// create global app parameters...
 	var NICK_MAX_LENGTH = 15,
 		ROOM_MAX_LENGTH = 10,
@@ -27,8 +32,10 @@
 			].join(""),
 			client: [
 				'<li data-clientId="${clientId}" class="cf">',
-					'<div class="fl clientName"><span class="icon"></span> ${nickname}</div>',
-					'<div class="fr composing"></div>',
+				'<div class="fl clientName" style="margin-top: 7px; margin-left: 7px;"><span class="icon"></span> ${nickname}</div>',
+                '<form style="display: none;"><input type="file" id="fileUpload"></form>',
+                '<img src="/images/myself.jpg" class="pull-right" width="32px" height="32px" style="border-radius: 5px; box-shadow: 0 2px 3px #000;" onclick="changeAvatar();">',
+				'<div class="fr composing"></div>',
 				'</li>'
 			].join(""),
 			message: [
@@ -37,6 +44,10 @@
 				'</li>'
 			].join("")
 		};
+    
+    var changeAvatar = function() {
+        alert('test change avatar');
+    };
 
 	// bind DOM elements like button clicks and keydown
 	function bindDOMEvents(){
@@ -247,8 +258,9 @@
 		if(announce){
 			insertMessage(serverDisplayName, client.nickname + ' has joined the room...', true, false, true);
 		}
-		$html.appendTo('.chat-clients ul')
+		$html.appendTo('.chat-clients ul');
 	}
+    
 
 	// remove a client from the clients list
 	function removeClient(client, announce){
@@ -310,18 +322,25 @@
 	// handle the client messages
 	function handleMessage(){
 		var message = $('.chat-input input').val().trim();
+
+
 		if(message){
 
 			// send the message to the server with the room name
 			socket.emit('chatmessage', { message: message, room: currentRoom });
-			
+            
+            // Insert smile in chat
+			for(var pro in smile) {
+                message = message.replace(pro, smile[pro]);
+            }
 			// display the message in the chat window
 			insertMessage(nickname, message, true, true);
+
 			$('.chat-input input').val('');
 		} else {
 			shake('.chat', '.chat input', 'wobble', 'yellow');
 		}
-	}
+    }
 
 	// insert a message to the chat window, this function can be
 	// called with some flags
