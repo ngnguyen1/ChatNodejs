@@ -20,6 +20,8 @@
 		serverAddress = 'http://localhost',
 		serverDisplayName = 'Server',
 		serverDisplayColor = '#1c5380',
+        
+
 
 		// some templates we going to use in the chat,
 		// like message row, client and room, this
@@ -33,8 +35,8 @@
 			client: [
 				'<li data-clientId="${clientId}" class="cf">',
 				'<div class="fl clientName" style="margin-top: 7px; margin-left: 7px;"><span class="icon"></span> ${nickname}</div>',
-                '<form style="display: none;"><input type="file" id="fileUpload"></form>',
-                '<img src="/images/myself.jpg" class="pull-right" width="32px" height="32px" style="border-radius: 5px; box-shadow: 0 2px 3px #000;" onclick="changeAvatar();">',
+                '<form id="frm" action="/images/uploads" method="post" enctype="multipart/form-data" style="display: none;"><input type="file" id="fileUpload"></form>',
+                '<img src="/images/myself.jpg" class="pull-right img-profile" width="32px" height="32px" style="border-radius: 5px; box-shadow: 0 2px 3px #000;">',
 				'<div class="fr composing"></div>',
 				'</li>'
 			].join(""),
@@ -45,10 +47,9 @@
 			].join("")
 		};
     
-    var changeAvatar = function() {
-        alert('test change avatar');
-    };
 
+
+    
 	// bind DOM elements like button clicks and keydown
 	function bindDOMEvents(){
 		
@@ -189,7 +190,7 @@
 					addClient(data.clients[i], false);
 				}
 			}
-
+            
 			// hide connecting to room message message
 			$('.chat-shadow').animate({ 'opacity': 0 }, 200, function(){
 				$(this).hide();
@@ -219,7 +220,7 @@
 			}
 		});
 	}
-
+    
 	// add a room to the rooms list, socket.io may add
 	// a trailing '/' to the name so we are clearing it
 	function addRoom(name, announce){
@@ -246,32 +247,55 @@
 	}
 
 	// add a client to the clients list
-	function addClient(client, announce, isMe){
+	var addClient = function (client, announce, isMe){
 		var $html = $.tmpl(tmplt.client, client);
-		
-		// if this is our client, mark him with color
+
+        $html.appendTo('.chat-clients ul');
+        
+        // if this is our client, mark him with color
 		if(isMe){
 			$html.addClass('me');
+            
+            $('.me .img-profile').on('click', function() {
+                changeAvatar();
+            });        
+            
+            console.log($html);
 		}
 
 		// if announce is true, show a message about this client
 		if(announce){
 			insertMessage(serverDisplayName, client.nickname + ' has joined the room...', true, false, true);
 		}
-		$html.appendTo('.chat-clients ul');
-	}
+
+	};
     
+    var test = function(evt) {
+        var files = evt.target.files;
+        console.log(files);
+    };
+
+
+    var changeAvatar = function() {
+        document.getElementById("fileUpload").click();
+        document.getElementById('fileUpload').addEventListener('change', test, false);
+        // document.getElementById('frm').submit(function() {
+            
+        // });
+        
+    };    
 
 	// remove a client from the clients list
-	function removeClient(client, announce){
+	var removeClient = function (client, announce){
 		$('.chat-clients ul li[data-clientId="' + client.clientId + '"]').remove();
 		
 		// if announce is true, show a message about this room
 		if(announce){
 			insertMessage(serverDisplayName, client.nickname + ' has left the room...', true, false, true);
 		}
-	}
-
+	};
+    
+    
 	// every client can create a new room, when creating one, the client
 	// is unsubscribed from the current room and then subscribed to the
 	// room he just created, if he trying to create a room with the same
@@ -333,6 +357,7 @@
 			for(var pro in smile) {
                 message = message.replace(pro, smile[pro]);
             }
+            
 			// display the message in the chat window
 			insertMessage(nickname, message, true, true);
 
@@ -367,12 +392,11 @@
 	}
 
 	// return a short time format for the messages
-	function getTime(){
+	var getTime = function (){
 		var date = new Date();
 		return (date.getHours() < 10 ? '0' + date.getHours().toString() : date.getHours()) + ':' +
 				(date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes());
-	}
-
+	};
 	// just for animation
 	function shake(container, input, effect, bgColor){
 		if(!lockShakeAnimation){
@@ -399,6 +423,9 @@
 		
 		// now that we have the socket we can bind events to it
 		bindSocketEvents();
+        
+
+
 	}
 
 	// on document ready, bind the DOM elements to events
