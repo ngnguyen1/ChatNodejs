@@ -16,6 +16,8 @@ app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
+io.set('log level', 2);
+
 var router = express.Router();
 require('./route')(router);
 
@@ -27,6 +29,8 @@ io.sockets.on('connection', function(socket){
 	socket.on('connect', function(data){
 		connect(socket, data);
 	});
+    
+
 
 	// when a client sends a messgae, he emits
 	// this event, then the server forwards the
@@ -65,10 +69,13 @@ function connect(socket, data){
 	// but the only way to pull it back will be
 	// async
 	chatClients[socket.id] = data;
-
+    
+//    console.log(data);
+    
 	// now the client objtec is ready, update
 	// the client
 	socket.emit('ready', { clientId: data.clientId });
+    
 
 	// auto subscribe the client to the 'lobby'
 	subscribe(socket, { room: 'lobby' });
@@ -76,6 +83,11 @@ function connect(socket, data){
 	// sends a list of all active rooms in the
 	// server
 	socket.emit('roomslist', { rooms: getRooms() });
+    
+    socket.on('change', function(data) {
+        chatClients[socket.id].avatar = data;
+        socket.broadcast.emit('changeAvatar', {client: chatClients[socket.id], avatar: chatClients[socket.id].avatar, data: data});
+    });
 }
 
 // when a client disconnect, unsubscribe him from
@@ -126,6 +138,7 @@ function subscribe(socket, data){
 	// send to the client a list of all subscribed clients
 	// in this room
 	socket.emit('roomclients', { room: data.room, clients: getClientsInRoom(socket.id, data.room) });
+
 }
 
 // unsubscribe a client from a room, this can be
