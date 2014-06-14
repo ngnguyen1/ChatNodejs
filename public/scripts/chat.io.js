@@ -2,9 +2,22 @@
 
 
 var smile = {
-    ':)': '<img src="http://www.matcuoi.com/smiley/sm2nini15.gif">',
-    ':(': '<img src="/images/icons/21.gif">',
+//    ':)': '<img src="http://www.matcuoi.com/smiley/sm2nini15.gif">',
+    ':)': '<img src="/images/icons/1.gif">',
+    ':(': '<img src="/images/icons/2.gif">',
+    ';)': '<img src="/images/icons/3.gif">',
+    ':d': '<img src="/images/icons/4.gif">',
+    ':x': '<img src="/images/icons/8.gif">',
+    'x(': '<img src="/images/icons/14.gif">',
+    ':-s': '<img src="/images/icons/17.gif">',
+    ':-((': '<img src="/images/icons/20.gif">',
+    ':|': '<img src="/images/icons/22.gif">',
+    ':-?': '<img src="/images/icons/39.gif">',
+    ':-))': '<img src="/images/icons/21.gif">',
+    ':-ss': '<img src="/images/icons/42.gif">',
+    ':-w': '<img src="/images/icons/45.gif">',
     '=))': '<img src="/images/icons/24.gif">'
+
 };
 
 // create global app variable...
@@ -14,7 +27,7 @@ var NICK_MAX_LENGTH = 15,
 	socket = null,
 	clientId = null,
 	nickname = null,
-    avatar = '/images/1.jpg',
+    avatar = '/images/git.jpg',
 
 	// holds the current room we are in
 	currentRoom = null,
@@ -45,7 +58,9 @@ var NICK_MAX_LENGTH = 15,
 		].join(""),
 		message: [
 			'<li class="cf">',
-			'<div class="fl sender">${sender}: </div><div class="fl text">{{html text}}</div><div class="fr time">${time}</div>',
+            '<p>',
+			'<span class="fl sender">${sender}: </span><span class="fl text">{{html text}}</span><span class="fr time">${time}</span>',
+            '</p>',
 			'</li>'
 		].join("")
 	};
@@ -123,7 +138,74 @@ function bindDOMEvents(){
 			socket.emit('subscribe', { room: room });
 		}
 	});
+    
+
+    
+    $('.right img').on('click', function() {
+        $('.modalEmo').toggle();
+    });
+    
+    $('.modalEmo').on('click', function() {
+        $(this).hide();
+    });
+    
+    
+    $('.listEmo li img').on('click', function() {
+        var smi = '<img src="' +$(this).attr('src') + '">';
+
+        for(var pro in smile) {
+            if (smile[pro] == smi) {
+                $('.inputDiv input').val(pro);
+                $('.inputDiv input').focus();
+            }
+        }
+    });
+    
+    // Transfer file to server
+    $('#file img').on('click', function() {
+        $('#filetrans').click();
+    });
+    
+    
+    $('.chat-private').on('click', function() {
+        alert('hehe');
+    });
+    
+    $('.chat-private-title').on('click', function() {
+        chatpri();
+    });
+    
 }
+
+var chatpri = function() {
+    if($('.nga').hasClass('abc')) {
+        $('.nga').removeClass('abc');
+    } else {
+        $('.nga').addClass('abc');
+    }
+};
+
+function checkTime(i) {
+    if (i<10) {
+        i = "0" + i;
+    };  // add zero in front of numbers < 10
+    return i;
+}
+
+var startTime = function () {
+    var today=new Date();
+    var h=today.getHours();
+    var m=today.getMinutes();
+    var s=today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('clock').innerHTML = h+":"+m+":"+s;
+    var t = setTimeout(function(){
+        startTime();
+    },500);
+};
+
+
 
 // bind socket.io event handlers
 // this events fired in the server
@@ -153,7 +235,7 @@ function bindSocketEvents(){
     
     socket.on('changeAvatar', function(data) {
         var s = "#" + data.client.clientId + " img";
-        console.log(data.data);
+//        console.log(data.data);
         $(s).attr('src', data.data);
 //        document.getElementById("data.client.clientId");
     });
@@ -204,6 +286,9 @@ function bindSocketEvents(){
 		
 		// add the clients to the clients list
 		addClient({ nickname: nickname, clientId: clientId }, false, true);
+        
+        
+
 		for(var i = 0, len = data.clients.length; i < len; i++){
 			if(data.clients[i]){
 				addClient(data.clients[i], false);
@@ -279,7 +364,12 @@ var addClient = function (client, announce, isMe){
             changeAvatar();
         });        
         
-	}
+	} else {
+        $html.addClass('notme');
+        $('.notme').on('click', function() {
+            alert('hehe');
+        });
+    }
 
 	// if announce is true, show a message about this client
 	if(announce){
@@ -420,11 +510,14 @@ function insertMessage(sender, message, showTime, isMe, isServer){
 	// know that this is our message in the chat window
 	if(isMe){
 		$html.addClass('marker');
-	}
+	} else if(!isServer) {
+        $html.addClass('notmarker');
+    }
 
 	// if isServer is true, mark this message as a server
 	// message
 	if(isServer){
+//        $html.addClass('server');
 		$html.find('.sender').css('color', serverDisplayColor);
 	}
     
@@ -474,10 +567,9 @@ function connect(){
 // on document ready, bind the DOM elements to events
 //	$(function(){
 $(document).ready(function(){
-    
 	bindDOMEvents();
-
-
+    $('.modalEmo').hide();
+    startTime();
 });
 
 //})(jQuery);
