@@ -10,6 +10,7 @@
 		<link href="/styles/animate.css" rel="stylesheet" type="text/css" />
 		<link href="/styles/style.css" rel="stylesheet" type="text/css" />
 		<link href="/styles/avgrund.css" rel="stylesheet" type="text/css" />
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 		
 	</head>
 	<body>
@@ -51,9 +52,40 @@
 					</div>
 					<div class="cf chat-bottom">
 						<div class="fl chat-input">
-							<input class="form-control" type="text" placeholder="Type message" />
+						  <div class="inputDiv"><input class="form-control" type="text" placeholder="Type message" /></div>
 						</div>
+                        <div class="right"><img src="/images/emo.png"></div>
+                        <div id="file"><form action="/upload" method="post" style="display: none;"><input name="fileImage" type="file" id="filetrans"></form><img src="/images/file.png"></div>
+                             
+                        <div class="modalEmo">
+                          <ul class="listEmo">
+                            <li><img src="/images/icons/24.gif"></li>
+                            <li><img src="/images/icons/21.gif"></li>
+                            <li><img src="/images/icons/45.gif"></li>
+                            <li><img src="/images/icons/8.gif"></li>
+                            <li><img src="/images/icons/1.gif"></li>
+                            <li><img src="/images/icons/2.gif"></li>
+                            <li><img src="/images/icons/3.gif"></li>
+                            <li><img src="/images/icons/14.gif"></li>
+                            <li><img src="/images/icons/17.gif"></li>
+                            <li><img src="/images/icons/20.gif"></li>
+                            <li><img src="/images/icons/22.gif"></li>
+                            <li><img src="/images/icons/39.gif"></li>
+                            <li><img src="/images/icons/42.gif"></li>
+                            <li><img src="/images/icons/4.gif"></li>
+                          </ul>
+                        </div>
+                        <div id="clock"></div>
 					</div>
+                    
+                    <div class="nga">
+                      <div id="private">
+                        <div class="chat-private-title">This is title</div>
+                        <div class="chat-private-body">This is body</div>
+                        <div class="inp"><input type="text" name="chat" /></div>
+                      </div>
+                    </div>
+
 				</div>
 				<div class="pa info animate">
 					<h2>About this Project</h2>
