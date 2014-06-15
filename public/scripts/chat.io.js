@@ -259,13 +259,14 @@ function bindSocketEvents(){
 	socket.on('chatmessage', function(data){
 		var nickname = data.client.nickname;
 		var message = data.message;
-		
+        var avatar = data.client.avatar;
+		console.log(data);
         // Insert smile in chat
 		for(var pro in smile) {
             message = message.replace(pro, smile[pro]);
         }
 		//display the message in the chat window
-		insertMessage(nickname, message, true, false, false);
+		insertMessage(nickname, message, true, false, false, avatar);
 	});
 	
 	// when we subscribes to a room, the server sends a list
@@ -288,12 +289,19 @@ function bindSocketEvents(){
 		addClient({ nickname: nickname, clientId: clientId }, false, true);
         
         
-
+        // $('.notme').on('click', function() {
+        //     alert('test');
+        // });
+        
 		for(var i = 0, len = data.clients.length; i < len; i++){
 			if(data.clients[i]){
 				addClient(data.clients[i], false);
+
 			}
 		}
+        
+        
+
         
 		// hide connecting to room message message
 		$('.chat-shadow').animate({ 'opacity': 0 }, 200, function(){
@@ -327,7 +335,7 @@ function bindSocketEvents(){
 
 // add a room to the rooms list, socket.io may add
 // a trailing '/' to the name so we are clearing it
-function addRoom(name, announce){
+var addRoom = function (name, announce){
 	// clear the trailing '/'
 	name = name.replace('/','');
 
@@ -366,10 +374,31 @@ var addClient = function (client, announce, isMe){
         
 	} else {
         $html.addClass('notme');
-        $('.notme').on('click', function() {
-            alert('hehe');
-        });
+        // var idCl = '#' + $('.notme').attr('id');
+        // console.log(idCl);
+        // $(idCl).on('click', function() {
+        //     alert('haha');
+        // });
+        
+        
+        // $('.notme').on('click', function() {
+        //     socket.emit('hehe', 'day la hehe');
+        //     socket.on('chatpri', function(data) {
+        //         console.log(data.nickname);
+        //         $('.nga .chat-private-title').html(data.nickname);
+        //     });
+        //     $('.nga').toggle();
+            
+        // });
+        
+        // if(!$('.chat-clients ul li').hasClass('me')) {
+        //     console.log('exist');
+        // } else {
+        //     console.log('empty');
+        // }
     }
+    
+
 
 	// if announce is true, show a message about this client
 	if(announce){
@@ -427,7 +456,7 @@ var removeClient = function (client, announce){
 // room he just created, if he trying to create a room with the same
 // name like another room, then the server will subscribe the user
 // to the existing room
-function createRoom(){
+var createRoom = function (){
 	var room = $('#addroom-popup .input input').val().trim();
 	if(room && room.length <= ROOM_MAX_LENGTH && room != currentRoom){
 		
@@ -441,6 +470,7 @@ function createRoom(){
 		// create and subscribe to the new room
 		socket.emit('subscribe', { room: room });
 		Avgrund.hide();
+        $('.chat-messages ul').empty();
 	} else {
 		shake('#addroom-popup', '#addroom-popup .input input', 'tada', 'yellow');
 		$('#addroom-popup .input input').val('');
@@ -449,7 +479,7 @@ function createRoom(){
 
 // sets the current room when the client
 // makes a subscription
-function setCurrentRoom(room){
+var setCurrentRoom = function (room){
 	currentRoom = room;
 	$('.chat-rooms ul li.selected').removeClass('selected');
 	$('.chat-rooms ul li[data-roomId="' + room + '"]').addClass('selected');
@@ -457,7 +487,7 @@ function setCurrentRoom(room){
 
 // save the client nickname and start the chat by
 // calling the 'connect()' function
-function handleNickname(){
+var handleNickname = function (){
 	var nick = $('#nickname-popup .input input').val().trim();
 	if(nick && nick.length <= NICK_MAX_LENGTH){
 		nickname = nick;
@@ -498,9 +528,10 @@ function handleMessage(){
 
 // insert a message to the chat window, this function can be
 // called with some flags
-function insertMessage(sender, message, showTime, isMe, isServer){
+function insertMessage(sender, message, showTime, isMe, isServer, avatar){
 	var $html = $.tmpl(
         tmplt.message, {
+            avatar: avatar,
 			sender: sender,
 			text: message,
 			time: showTime ? getTime() : ''
@@ -508,6 +539,7 @@ function insertMessage(sender, message, showTime, isMe, isServer){
 
 	// if isMe is true, mark this message so we can
 	// know that this is our message in the chat window
+    
 	if(isMe){
 		$html.addClass('marker');
 	} else if(!isServer) {
@@ -517,7 +549,7 @@ function insertMessage(sender, message, showTime, isMe, isServer){
 	// if isServer is true, mark this message as a server
 	// message
 	if(isServer){
-//        $html.addClass('server');
+        $html.addClass('server');
 		$html.find('.sender').css('color', serverDisplayColor);
 	}
     
@@ -533,7 +565,7 @@ var getTime = function (){
 		(date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes());
 };
 // just for animation
-function shake(container, input, effect, bgColor){
+var shake = function (container, input, effect, bgColor){
 	if(!lockShakeAnimation){
 		lockShakeAnimation = true;
 		$(container).addClass(effect);
@@ -549,7 +581,7 @@ function shake(container, input, effect, bgColor){
 
 // after selecting a nickname we call this function
 // in order to init the connection with the server
-function connect(){
+var connect = function (){
 	// show connecting message
 	$('.chat-shadow .content').html('Connecting...');
 	
@@ -569,6 +601,7 @@ function connect(){
 $(document).ready(function(){
 	bindDOMEvents();
     $('.modalEmo').hide();
+    $('.nga').hide();
     startTime();
 });
 

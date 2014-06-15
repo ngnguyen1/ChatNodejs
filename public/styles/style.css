@@ -399,12 +399,12 @@ ul.listEmo li {
 
 
 .notmarker p {
+    float: left;
     overflow: hidden;
-    max-width: 400px;
+    max-width: 300px;
     border-radius: .75rem;
-    background: #e6e5eb;
-    color: #383641;
-    padding: .6875rem;
+    background: #E6E5EB;
+    padding: 10px 20px;
     margin: 0;
     font-size: .875rem;
 }
@@ -419,6 +419,12 @@ ul.listEmo li {
     color: #000;
 }
 
+
+.server {
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    background: #ddd;
+}
 
 /* .chat .chat-bottom .chat-submit { */
 /*     width:200px; */
@@ -487,7 +493,6 @@ ul.listEmo li {
 }
 .chat-messages ul li {
     padding:10px;
-    margin-left:7px;
 }
 .chat-messages ul li .sender {
     font-size:20px;
