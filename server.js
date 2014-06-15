@@ -48,6 +48,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('unsubscribe', function(data){
 		unsubscribe(socket, data);
 	});
+    
 
 	// when a client calls the 'socket.close()'
 	// function or closes the browser, this event
@@ -77,8 +78,8 @@ function connect(socket, data){
 	socket.emit('ready', { clientId: data.clientId });
     
 
-	// auto subscribe the client to the 'lobby'
-	subscribe(socket, { room: 'lobby' });
+	// auto subscribe the client to the 'default'
+	subscribe(socket, { room: 'default' });
 
 	// sends a list of all active rooms in the
 	// server
@@ -87,6 +88,10 @@ function connect(socket, data){
     socket.on('change', function(data) {
         chatClients[socket.id].avatar = data;
         socket.broadcast.emit('changeAvatar', {client: chatClients[socket.id], avatar: chatClients[socket.id].avatar, data: data});
+    });
+    
+    socket.on('hehe', function(data) {
+        socket.emit('chatpri', chatClients[socket.id]);
     });
 }
 
