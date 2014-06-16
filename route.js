@@ -1,6 +1,8 @@
 'use strict';
 
-module.exports = function(router) {
+var fs=require('fs');
+
+module.exports = function(router, multy) {
     router.get('/', function(req, res) {
         res.render('index.ejs');
     });
@@ -12,4 +14,8 @@ module.exports = function(router) {
     router.post('/images/uploads', function(req, res) {
         console.log(JSON.stringify(req));
     });
+    
+
+    
+    
 };
