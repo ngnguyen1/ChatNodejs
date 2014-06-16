@@ -7,6 +7,11 @@ var express 	= require('express'),
     port    	= process.env.PORT || 1901,
     bodyParser = require('body-parser'),
     socketsCount = 0,
+    multipart = require('connect-multiparty'),
+    multipartMiddleware = multipart(),
+    fs = require('fs'),
+    nPath = '',
+    files = '',
 
     // hash object to save clients data,
     // { socketid: { clientid, nickname }, socketid: { ... } }
@@ -14,12 +19,21 @@ var express 	= require('express'),
 
 app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/uploads'));
 app.set('view engine', 'ejs');
 
 io.set('log level', 2);
 
 var router = express.Router();
-require('./route')(router);
+require('./route')(router, multipartMiddleware);
+
+
+
+router.get('/:file(*)', function(req, res) {
+    var file = req.params.file,
+        path =  __dirname + '/' + file;
+    res.download(path);
+});
 
 
 io.sockets.on('connection', function(socket){
@@ -29,6 +43,8 @@ io.sockets.on('connection', function(socket){
 	socket.on('connect', function(data){
 		connect(socket, data);
 	});
+    
+    console.log(nPath);
     
 
 
@@ -92,7 +108,20 @@ function connect(socket, data){
     
     socket.on('hehe', function(data) {
         socket.emit('chatpri', chatClients[socket.id]);
+
     });
+    
+    router.post('/upload', multipartMiddleware, function(req, res) {
+        //        console.log(JSON.stringify(req.files.fileImage.originalFilename));
+        fs.readFile(req.files.fileImage.path, function (err, data) {
+            nPath = __dirname + "/uploads/" + req.files.fileImage.originalFilename;
+            files = req.files.fileImage.originalFilename;
+            fs.writeFile(nPath, data, function (err) {
+                socket.broadcast.emit('filet', req.files.fileImage.originalFilename);
+                //            res.redirect("back");
+            });
+        }); 
+    }); 
 }
 
 // when a client disconnect, unsubscribe him from
@@ -115,15 +144,15 @@ function disconnect(socket){
 
 // receive chat message from a client and
 // send it to the relevant room
-function chatmessage(socket, data){
+var chatmessage = function (socket, data){
 	// by using 'socket.broadcast' we can send/emit
 	// a message/event to all other clients except
 	// the sender himself
 	socket.broadcast.to(data.room).emit('chatmessage', { client: chatClients[socket.id], message: data.message, room: data.room });
-}
+};
 
 // subscribe a client to a room
-function subscribe(socket, data){
+var subscribe = function (socket, data){
 	// get a list of all active rooms
 	var rooms = getRooms();
 
@@ -144,7 +173,7 @@ function subscribe(socket, data){
 	// in this room
 	socket.emit('roomclients', { room: data.room, clients: getClientsInRoom(socket.id, data.room) });
 
-}
+};
 
 // unsubscribe a client from a room, this can be
 // occured when a client disconnected from the server
@@ -171,12 +200,12 @@ function unsubscribe(socket, data){
 // 'io.sockets.manager.rooms' is an object that holds
 // the active room names as a key, returning array of
 // room names
-function getRooms(){
+var getRooms = function (){
 	return Object.keys(io.sockets.manager.rooms);
-}
+};
 
 // get array of clients in a room
-function getClientsInRoom(socketId, room){
+var getClientsInRoom = function (socketId, room){
 	// get array of socket ids in this room
 	var socketIds = io.sockets.manager.rooms['/' + room];
 	var clients = [];
