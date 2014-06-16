@@ -374,13 +374,14 @@ ul.listEmo li {
 .marker p {
     float: right;
     overflow: hidden;
-    max-width: 400px;
+    width: 400px;
     border-radius: .75rem;
     background: #C9DFFE;
     padding: 10px 20px;
     margin: 0;
     font-size: .875rem;
 }
+
 
 .marker p .time {
     float: left;
@@ -392,16 +393,16 @@ ul.listEmo li {
     display: block;
 }
 
-.marker p .sender {
-    display: none;
-}
+/* .marker p .sender { */
+/*     display: none; */
+/* } */
 
 
 
 .notmarker p {
     float: left;
     overflow: hidden;
-    max-width: 300px;
+    width: 400px;
     border-radius: .75rem;
     background: #E6E5EB;
     padding: 10px 20px;

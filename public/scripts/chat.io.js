@@ -50,7 +50,7 @@ var NICK_MAX_LENGTH = 15,
 		].join(""),
 		client: [
 			'<li data-clientId="${clientId}" id="${clientId}" class="cf">',
-			'<div class="fl clientName" style="margin-top: 7px; margin-left: 7px;"><span class="icon"></span> ${nickname}</div>',
+			'<div class="fl clientName" data-clientName="${nickname}" style="margin-top: 7px; margin-left: 7px;"><span class="icon"></span> ${nickname}</div>',
             '<form action="/images/uploads" method="post" enctype="multipart/form-data" style="display: none;"><input type="file" id="fileUpload"></form>',
             '<img src="${avatar}" class="pull-right img-profile" width="32px" height="32px" style="border-radius: 5px; box-shadow: 0 2px 3px #000;">',
 			'<div class="fr composing"></div>',
@@ -164,6 +164,7 @@ function bindDOMEvents(){
     // Transfer file to server
     $('#file img').on('click', function() {
         $('#filetrans').click();
+        document.getElementById('filetrans').addEventListener('change', test2, false);
     });
     
     
@@ -176,6 +177,19 @@ function bindDOMEvents(){
     });
     
 }
+
+var test2 = function(evt) {
+    var files = evt.target.files;
+    if (files.length != 0) {
+        
+        $('#frm').submit();
+        
+
+
+    } else {
+        console.log('chua chon');
+    }
+};
 
 var chatpri = function() {
     if($('.nga').hasClass('abc')) {
@@ -203,6 +217,9 @@ var startTime = function () {
     var t = setTimeout(function(){
         startTime();
     },500);
+    
+
+    
 };
 
 
@@ -231,6 +248,12 @@ function bindSocketEvents(){
 		// saving the clientId localy
 		clientId = data.clientId;
 	});
+    
+    socket.on('filet', function(data) {
+        //            $('.inputDiv input').val('File: ' + data);
+        //            $('.inputDiv input').val('<a href="/uploads/cmd.sh">haha</a>');
+        insertMessage(serverDisplayName, 'File: <a href="/uploads/'+data + '">'+ data +'</a> avaiable in server.', true, false, true);
+    });
     
     
     socket.on('changeAvatar', function(data) {
@@ -279,6 +302,7 @@ function bindSocketEvents(){
 		// set the current room
 		setCurrentRoom(data.room);
 		
+        console.log(data);
         
 //        console.log(data);
 		// announce a welcome message
@@ -381,15 +405,15 @@ var addClient = function (client, announce, isMe){
         // });
         
         
-        // $('.notme').on('click', function() {
-        //     socket.emit('hehe', 'day la hehe');
-        //     socket.on('chatpri', function(data) {
-        //         console.log(data.nickname);
-        //         $('.nga .chat-private-title').html(data.nickname);
-        //     });
-        //     $('.nga').toggle();
+        $('.notme').on('click', function() {
+            socket.emit('hehe', 'day la hehe');
+            socket.on('chatpri', function(data) {
+                console.log($('.clientName').attr('data-clientName'));
+                $('.nga .chat-private-title').html(data.nickname);
+            });
+            $('.nga').toggle();
             
-        // });
+        });
         
         // if(!$('.chat-clients ul li').hasClass('me')) {
         //     console.log('exist');
